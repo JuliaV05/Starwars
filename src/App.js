@@ -1,11 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import Table from './components/Table';
+import TableContext from './context/TableContext';
 
 function App() {
+  const [planets, setPlanets] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Requisição da api de planetas:
+  const apiPlanets = () => {
+    setLoading(true);
+    fetch('https://swapi.dev/api/planets')
+      .then((result) => result.json())
+      .then((data) => {
+        const dataObj = data.results.map((result) => {
+          delete result.residents;
+          return result;
+        });
+        return setPlanets(dataObj);
+      })
+      .catch((err) => setError(err))
+      .finally(setLoading(false));
+  };
+  const context = {
+    planets,
+    loading,
+    error,
+  };
+
+  useEffect(() => {
+    apiPlanets();
+  }, []);
   return (
-    <span>Hello, Júlia! Vamos lá ? 
-      O Senhor te capacitou para fazer esse projeto. Ele acredita em você!
-    </span>
+    <TableContext.Provider value={ context }>
+      <main>Hello, App!</main>
+      <Table />
+    </TableContext.Provider>
   );
 }
 
