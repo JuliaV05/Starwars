@@ -6,18 +6,47 @@ import TableContext from '../context/TableContext';
 function Table() {
   const { planets } = useContext(TableContext);
   const [searchInput, setSearchInput] = useState('');
+  const [filterInput, setFilterInput] = useState({ column: 'population',
+    comparison: 'maior que',
+    number: 0 });
 
   const filteredPlanets = planets.filter((planet) => planet.name.toLowerCase()
     .includes(searchInput.toLowerCase()));
   console.log(filteredPlanets);
 
-  // 1 - Renderiza o campo de texto para o filtro de nomes;
-  // 2 - Filtra os planetas que possuem a letra "o" no nome;
-  // 3 - Filtra planetas que possuem a letra "oo" no nome;
-  // 4 - Realiza os dois filtros acima em sequência e após, testa a remoção do filtro por texto.
+  // const buttonFilter = ({target}) => {
+  //   setFilterInput(...filterInput, target.value )
+  // };
 
   return (
     <main>
+      <select
+        data-testid="column-filter"
+        onChange={ ({ target }) => setFilterInput({...filterInput, target.value)} }
+      >
+        <option value="population">population</option>
+        <option value="orbital_period">orbital_period</option>
+        <option value="diameter">diameter</option>
+        <option value="rotation_period">rotation_period</option>
+        <option value="surface_water">surface_water</option>
+      </select>
+      <select
+        data-testid="comparison-filter"
+        onChange={ ({ target }) => setFilterInput(...filterInput, target.value) }
+      >
+        <option value="maior que">maior que</option>
+        <option value="menor que">menor que</option>
+        <option value="igual a">igual a</option>
+      </select>
+      <input
+        type="number"
+        data-testid="value-filter"
+        onChange={ ({ target }) => setFilterInput(...filterInput, target.value) }
+      />
+      <button type="button" data-testid="button-filter">
+        Filtrar
+      </button>
+
       <label htmlFor="filter-name">
         Projeto Star Wars-Trybe
         <br />
