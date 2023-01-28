@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import TableContext from '../context/TableContext';
 
 // aqui está a minha tabela com as informações dos planetas ( requsição da api que está no App)
@@ -9,20 +9,53 @@ function Table() {
   const [filterInput, setFilterInput] = useState({ column: 'population',
     comparison: 'maior que',
     number: 0 });
+  const [filterList, setFilterList] = useState([]);
+  const [filteredPlanets, setFilteredPlanets] = useState([]);
 
-  const filteredPlanets = planets.filter((planet) => planet.name.toLowerCase()
-    .includes(searchInput.toLowerCase()));
-  console.log(filteredPlanets);
+  useEffect(() => {
+    const newArrPlanets = planets.filter((planet) => planet.name.toLowerCase()
+      .includes(searchInput.toLowerCase()));
+    setFilteredPlanets(newArrPlanets);
+  }, [searchInput]);
 
-  // const buttonFilter = ({target}) => {
-  //   setFilterInput(...filterInput, target.value )
-  // };
+  const objectFilter = () => {
+    setFilterList([...filterList, filterInput]);
+  };
+
+  useEffect(() => {
+    setFilteredPlanets(planets);
+  }, [planets]);
+
+  useEffect(() => {
+    const newArrPlanets = filterList.reduce((arrPlanets, currFilter) => (
+      arrPlanets.filter((planet) => {
+        switch (currFilter.comparison) {
+        case 'maior que': {
+          return Number(planet[currFilter.column]) > Number(currFilter.number); }
+        case 'menor que': {
+          return Number(planet[currFilter.column]) < Number(currFilter.number); }
+        default: {
+          return Number(planet[currFilter.column]) === Number(currFilter.number); }
+        }
+      })
+    ), planets);
+    console.log(newArrPlanets);
+    setFilteredPlanets(newArrPlanets);
+  }, [filterList]);
+
+  //    - Verifica se os valores iniciais de cada campo são (population | maior que | 0);
+  //    - Utiliza o botão de filtrar sem alterar os valores iniciais dos inputs de filtro;
+  //    - Filtra utilizando a comparação "menor que";
+  //    - Filtra utilizando a comparação "maior que";
+  //    - Filtra utilizando a comparação "igual a".
 
   return (
     <main>
       <select
         data-testid="column-filter"
-        onChange={ ({ target }) => setFilterInput({...filterInput, target.value)} }
+        onChange={ ({ target }) => setFilterInput(
+          { ...filterInput, column: target.value },
+        ) }
       >
         <option value="population">population</option>
         <option value="orbital_period">orbital_period</option>
@@ -32,7 +65,9 @@ function Table() {
       </select>
       <select
         data-testid="comparison-filter"
-        onChange={ ({ target }) => setFilterInput(...filterInput, target.value) }
+        onChange={ ({ target }) => setFilterInput(
+          { ...filterInput, comparison: target.value },
+        ) }
       >
         <option value="maior que">maior que</option>
         <option value="menor que">menor que</option>
@@ -41,9 +76,15 @@ function Table() {
       <input
         type="number"
         data-testid="value-filter"
-        onChange={ ({ target }) => setFilterInput(...filterInput, target.value) }
+        onChange={ ({ target }) => setFilterInput(
+          { ...filterInput, number: target.value },
+        ) }
       />
-      <button type="button" data-testid="button-filter">
+      <button
+        type="button"
+        data-testid="button-filter"
+        onClick={ objectFilter }
+      >
         Filtrar
       </button>
 
@@ -59,6 +100,12 @@ function Table() {
         />
 
       </label>
+
+      {filterList.map((list, index) => (
+        <h1 key={ index }>
+          { `${list.column} ${list.comparison} ${list.number}`}
+        </h1>
+      ))}
 
       <table>
         <thead>
