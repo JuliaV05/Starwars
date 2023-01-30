@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import Table from './components/Table';
 import TableContext from './context/TableContext';
-import TableProvider from './provider/TableProvider';
 
 function App() {
   const [planets, setPlanets] = useState([]);
@@ -36,7 +35,6 @@ function App() {
   return (
     <TableContext.Provider value={ context }>
       <Table />
-      <TableProvider />
     </TableContext.Provider>
   );
 }
