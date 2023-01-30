@@ -13,6 +13,7 @@ function TableProvider() {
   const [controlFilter, setControlFilter] = useState({
     population: '',
   });
+  console.log(filterInput);
 
   useEffect(() => {
     const newArrPlanets = planets.filter((planet) => planet.name.toLowerCase()
@@ -48,6 +49,13 @@ function TableProvider() {
     console.log(newArrPlanets);
     setFilteredPlanets(newArrPlanets);
   }, [filterList]);
+
+  const buttonEraser = (target) => {
+    console.log(target.value);
+    const resultArrFilter = filterList.filter((filtro) => filtro.column !== target.value);
+    setFilterList(resultArrFilter);
+    setControlFilter({ population: '' });
+  };
 
   return (
     <main>
@@ -105,14 +113,25 @@ function TableProvider() {
       </label>
 
       {filterList.map((list, index) => (
-        <h1 key={ index }>
+        <h1
+          key={ index }
+          data-testid="filter"
+        >
           { `${list.column} ${list.comparison} ${list.number}`}
+          <button
+            value={ list.column }
+            data-testid="button-remove-filters"
+            onClick={ ({ target }) => buttonEraser(target) }
+          >
+            X
+
+          </button>
         </h1>
       ))}
 
-      <table>
+      <table id="table">
         <thead>
-          <tr>
+          <tr id="row">
             <th>Name</th>
             <th>Rotation Period</th>
             <th>Orbital Period</th>
