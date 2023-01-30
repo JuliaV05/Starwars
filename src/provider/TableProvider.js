@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from 'react';
 import TableContext from '../context/TableContext';
 
 // aqui está a minha tabela com as informações dos planetas ( requsição da api que está no App)
-
 function TableProvider() {
   const { planets } = useContext(TableContext);
   const [searchInput, setSearchInput] = useState('');
@@ -10,7 +9,6 @@ function TableProvider() {
     comparison: 'maior que',
     number: 0 });
   const [filterList, setFilterList] = useState([]);
-  // array de planetas
   const [filteredPlanets, setFilteredPlanets] = useState([]);
 
   useEffect(() => {
@@ -45,6 +43,11 @@ function TableProvider() {
   }, [filterList]);
 
   //    - Verifica se os valores iniciais de cada campo são (population | maior que | 0);
+  //    - Utiliza o botão de filtrar sem alterar os valores iniciais dos inputs de filtro;
+  //    - Filtra utilizando a comparação "menor que";
+  //    - Filtra utilizando a comparação "maior que";
+  //    - Filtra utilizando a comparação "igual a".
+
   return (
     <main>
       <select
