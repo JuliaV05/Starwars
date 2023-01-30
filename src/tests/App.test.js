@@ -20,7 +20,7 @@ test('test if the text "Projeto Star Wars"', () => {
 });
 
 it('Table tests', () => {
-  render(<Table />)
+  render(<TableProvider />)
   
   const inputName = screen.getByRole('columnheader', { name: /name/i })
   const inputRotation = screen.getByRole('columnheader', { name: /rotation period/i })

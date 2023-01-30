@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import TableContext from '../context/TableContext';
 
-// aqui está a minha tabela com as informações dos planetas ( requsição da api que está no App)
+// aqui está a minha tabela com as informações dos planetas ( requisição da api que está no App)
 function TableProvider() {
   const { planets } = useContext(TableContext);
   const [searchInput, setSearchInput] = useState('');
@@ -10,6 +10,9 @@ function TableProvider() {
     number: 0 });
   const [filterList, setFilterList] = useState([]);
   const [filteredPlanets, setFilteredPlanets] = useState([]);
+  const [controlFilter, setControlFilter] = useState({
+    population: '',
+  });
 
   useEffect(() => {
     const newArrPlanets = planets.filter((planet) => planet.name.toLowerCase()
@@ -19,6 +22,10 @@ function TableProvider() {
 
   const objectFilter = () => {
     setFilterList([...filterList, filterInput]);
+    setFilterInput({ column: 'population', comparison: 'maior que', number: 0 });
+    setControlFilter({ ...controlFilter, population: 'population' });
+    const data = Object.values(filterInput);
+    setControlFilter({ ...controlFilter, [data[0]]: data.join(' ') });
   };
 
   useEffect(() => {
@@ -42,27 +49,23 @@ function TableProvider() {
     setFilteredPlanets(newArrPlanets);
   }, [filterList]);
 
-  //    - Verifica se os valores iniciais de cada campo são (population | maior que | 0);
-  //    - Utiliza o botão de filtrar sem alterar os valores iniciais dos inputs de filtro;
-  //    - Filtra utilizando a comparação "menor que";
-  //    - Filtra utilizando a comparação "maior que";
-  //    - Filtra utilizando a comparação "igual a".
-
   return (
     <main>
       <select
+        value={ filterInput.column }
         data-testid="column-filter"
         onChange={ ({ target }) => setFilterInput(
           { ...filterInput, column: target.value },
         ) }
       >
-        <option value="population">population</option>
+        { !controlFilter.population && <option value="population">population</option> }
         <option value="orbital_period">orbital_period</option>
         <option value="diameter">diameter</option>
         <option value="rotation_period">rotation_period</option>
         <option value="surface_water">surface_water</option>
       </select>
       <select
+        value={ filterInput.comparison }
         data-testid="comparison-filter"
         onChange={ ({ target }) => setFilterInput(
           { ...filterInput, comparison: target.value },
@@ -73,6 +76,7 @@ function TableProvider() {
         <option value="igual a">igual a</option>
       </select>
       <input
+        value={ filterInput.number }
         type="number"
         data-testid="value-filter"
         onChange={ ({ target }) => setFilterInput(
