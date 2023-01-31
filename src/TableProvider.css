@@ -1,13 +1,13 @@
 body {
- background-color: blueviolet;
+  background-color: blueviolet;
 }
 
 #table {
-  display: table;
-  color: blue;
   background-color: aqua;
+  color: blue;
+  display: table;
 }
 
 #row {
-  display: table-row;  
+  display: table-row;
 }
