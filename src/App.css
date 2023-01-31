@@ -1,14 +1,14 @@
 body {
   background-color: aliceblue;
   color: black;
- }
- 
- #table {
-   display: table;
-   color: rgb(30, 30, 41);
-   background-color: slategrey;
- }
- 
- #row {
-   display: table-row;  
- }
+}
+
+#table {
+  background-color: slategrey;
+  color: rgb(30, 30, 41);
+  display: table;
+}
+
+#row {
+  display: table-row;
+}
