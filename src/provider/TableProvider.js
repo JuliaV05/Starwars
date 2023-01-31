@@ -20,7 +20,6 @@ function TableProvider() {
   const [select, setSelect] = useState({ order: { column: 'population', sort: 'ASC' } });
 
   useEffect(() => {
-    console.log('foi');
   }, [filteredPlanets]);
 
   useEffect(() => {
@@ -54,7 +53,6 @@ function TableProvider() {
         }
       })
     ), planets);
-    console.log(newArrPlanets);
     setFilteredPlanets(newArrPlanets);
   }, [filterList]);
 
