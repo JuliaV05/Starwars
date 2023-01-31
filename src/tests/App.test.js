@@ -57,8 +57,8 @@ describe('Testa se a tabela está na tela', () => {
   })
   test('se todas as colunas são renderizadas na tela', async () => {
     await act(() => render(<App />));
-    const planetsTable = screen.getAllByRole('row');
-    expect(planetsTable.length).toBe(11);
+    const plntsTable = screen.getAllByRole('row');
+    expect(plntsTable.length).toBe(11);
   });
   test('se "Name" está na tela', async () => {
     await act(() => render(<App />));
@@ -95,9 +95,9 @@ describe('Testa se a tabela está na tela', () => {
 
   test('se "Planet search" é renderizado na tela', async () => {
     await act(() => render(<App />));
-    const textFilter = screen.getByRole('textbox',
+    const txtFilter = screen.getByRole('textbox',
       { name: /projeto star wars/i });
-    expect(textFilter).toBeInTheDocument();
+    expect(txtFilter).toBeInTheDocument();
   });
   test('se "Coluna" é renderizado na tela', async () => {
     await act(() => render(<App />));
@@ -106,13 +106,13 @@ describe('Testa se a tabela está na tela', () => {
   });
   test('se "Operator" é renderizado na tela', async () => {
     await act(() => render(<App />));
-    const operatorFilter = screen.getByTestId("column-filter");
-    expect(operatorFilter).toBeInTheDocument();
+    const operatorFltr = screen.getByTestId("column-filter");
+    expect(operatorFltr).toBeInTheDocument();
   });
   test('se "Number" é renderizado na tela', async () => {
     await act(() => render(<App />));
-    const numberFilter = screen.getByTestId("value-filter");
-    expect(numberFilter).toBeInTheDocument();
+    const numberFltr = screen.getByTestId("value-filter");
+    expect(numberFltr).toBeInTheDocument();
   });
   test('Teste se "name-filter" executa o filtro certo', async () => {
     await act(() => render(<App />));
@@ -125,12 +125,12 @@ describe('Testa se a tabela está na tela', () => {
   });
   test('Teste se "population" executa o filtro certo', async () => {
     await act(() => render(<App />));
-    const filterByColumn = screen.getByTestId('column-filter');
+    const fltrByColumn = screen.getByTestId('column-filter');
     const filterByOperator = screen.getByTestId('column-filter');
     const buttonFilter = screen.getByRole('button', { name: /filtrar/i })
-    expect(filterByColumn).toBeInTheDocument;
+    expect(fltrByColumn).toBeInTheDocument;
     expect(filterByOperator).toBeInTheDocument;
-    userEvent.type(filterByColumn, 'population');
+    userEvent.type(fltrByColumn, 'population');
     userEvent.type(filterByOperator, 'maior que');
     userEvent.click(buttonFilter);
     const filteredPlanet = screen.getByRole('cell',
@@ -139,15 +139,15 @@ describe('Testa se a tabela está na tela', () => {
   });
   test('inputs order asc e desc e button', async () => {
     await act(() => render(<App />))
-    const ASC = screen.getByTestId('column-sort-input-asc')
+    const ascendent = screen.getByTestId('column-sort-input-asc')
     const order = screen.getByRole('button', { name: /ordenar/i })
 
-    userEvent.click(ASC);
+    userEvent.click (ascendent);
     userEvent.click(order);
 
 
-    const DESC = screen.getByTestId('column-sort-input-desc')
-    userEvent.click(DESC);
+    const descendent = screen.getByTestId('column-sort-input-desc')
+    userEvent.click(descendent);
     userEvent.click(order);
   });
 });
