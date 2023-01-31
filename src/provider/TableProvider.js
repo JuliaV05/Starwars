@@ -12,8 +12,16 @@ function TableProvider() {
   const [filteredPlanets, setFilteredPlanets] = useState([]);
   const [controlFilter, setControlFilter] = useState({
     population: '',
+    orbital_period: '',
+    diameter: '',
+    rotation_period: '',
+    surface_water: '',
   });
-  console.log(filterInput);
+  const [select, setSelect] = useState({ order: { column: 'population', sort: 'ASC' } });
+
+  useEffect(() => {
+    console.log('foi');
+  }, [filteredPlanets]);
 
   useEffect(() => {
     const newArrPlanets = planets.filter((planet) => planet.name.toLowerCase()
@@ -51,12 +59,30 @@ function TableProvider() {
   }, [filterList]);
 
   const buttonEraser = (target) => {
+    const { value } = target;
     console.log(target.value);
     const resultArrFilter = filterList.filter((filtro) => filtro.column !== target.value);
     setFilterList(resultArrFilter);
-    setControlFilter({ population: '' });
+    setControlFilter({ [value]: '' });
   };
 
+  const cleanButton = () => {
+    setFilterList([]);
+  };
+  // primeira condicional: do menor para o maior; segunda condicional: do maior para o menor.
+  const columnAscDesc = () => {
+    const sort = filteredPlanets.sort((asc, desc) => (
+      select.order.sort !== 'ASC' ? asc[select.order.column] - desc[select.order.column]
+        : desc[select.order.column] - asc[select.order.column]));
+    setFilteredPlanets([...sort.reduce((acc, curr) => {
+      if (curr[select.order.column] === 'unknown') {
+        acc.push(curr);
+      } else {
+        acc.unshift(curr);
+      }
+      return acc;
+    }, [])]);
+  };
   return (
     <main>
       <select
@@ -67,10 +93,13 @@ function TableProvider() {
         ) }
       >
         { !controlFilter.population && <option value="population">population</option> }
-        <option value="orbital_period">orbital_period</option>
-        <option value="diameter">diameter</option>
-        <option value="rotation_period">rotation_period</option>
-        <option value="surface_water">surface_water</option>
+        { !controlFilter.orbital_period
+        && <option value="orbital_period">orbital_period</option> }
+        { !controlFilter.diameter && <option value="diameter">diameter</option> }
+        { !controlFilter.rotation_period
+        && <option value="rotation_period">rotation_period</option> }
+        { !controlFilter.surface_water
+        && <option value="surface_water">surface_water</option> }
       </select>
       <select
         value={ filterInput.comparison }
@@ -98,7 +127,57 @@ function TableProvider() {
       >
         Filtrar
       </button>
-
+      <select
+        data-testid="column-sort"
+        onChange={ ({ target }) => setSelect(
+          { order: { ...select.order, column: target.value } },
+        ) }
+      >
+        <option value="population">population</option>
+        <option value="orbital_period">orbital_period</option>
+        <option value="diameter">diameter</option>
+        <option value="rotation_period">rotation_period</option>
+        <option value="surface_water">surface_water</option>
+      </select>
+      <label htmlFor="asc">
+        Ascendente
+        <input
+          type="radio"
+          data-testid="column-sort-input-asc"
+          id="asc"
+          name="sort"
+          value="ASC"
+          onChange={ ({ target }) => setSelect(
+            { order: { ...select.order, sort: target.value },
+            },
+          ) }
+        />
+      </label>
+      <label htmlFor="desc">
+        Descendente
+        <input
+          type="radio"
+          name="sort"
+          data-testid="column-sort-input-desc"
+          id="desc"
+          value="DESC"
+          onChange={ ({ target }) => setSelect(
+            { order: { ...select.order, sort: target.value } },
+          ) }
+        />
+      </label>
+      <button
+        data-testid="column-sort-button"
+        onClick={ columnAscDesc }
+      >
+        Ordenar
+      </button>
+      <button
+        data-testid="button-remove-filters"
+        onClick={ cleanButton }
+      >
+        Apagar filtros
+      </button>
       <label htmlFor="filter-name">
         Projeto Star Wars-Trybe
         <br />
@@ -109,9 +188,7 @@ function TableProvider() {
           name="searchInput"
           onChange={ (e) => setSearchInput(e.target.value) }
         />
-
       </label>
-
       {filterList.map((list, index) => (
         <h1
           key={ index }
@@ -120,11 +197,9 @@ function TableProvider() {
           { `${list.column} ${list.comparison} ${list.number}`}
           <button
             value={ list.column }
-            data-testid="button-remove-filters"
             onClick={ ({ target }) => buttonEraser(target) }
           >
             X
-
           </button>
         </h1>
       ))}
@@ -150,7 +225,7 @@ function TableProvider() {
         <tbody>
           { filteredPlanets.map((planet) => (
             <tr key={ planet.name }>
-              <td>{planet.name}</td>
+              <td data-testid="planet-name">{planet.name}</td>
               <th>{planet.rotation_period}</th>
               <th>{planet.orbital_period}</th>
               <th>{planet.diameter}</th>
