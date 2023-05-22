@@ -201,7 +201,7 @@ function TableProvider() {
           </button>
         </h1>
       ))}
-
+      {/*
       <table id="table">
         <thead>
           <tr id="row">
@@ -239,7 +239,7 @@ function TableProvider() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </main>
   );
 }

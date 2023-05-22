@@ -1,8 +1,10 @@
 // import React, { useContext } from 'react';
 // import TableContext from '../context/TableContext';
 
-// function ButtonRemove() {
+function ButtonRemove() {
 //   const { filterList } = useContext(TableContext);
-//   return (
-//   );
-// }
+  return (
+    <div>  </div>
+  );
+}
+export default ButtonRemove;
